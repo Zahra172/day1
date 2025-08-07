@@ -1,5 +1,5 @@
-const CACHE_NAME = "zaq_myapp_v4";
-const API_CACHE_NAME = "zaq_api_cache_v2";
+const CACHE_NAME = "zaq_myapp_v5";
+const API_CACHE_NAME = "zaq_api_cache_v3";
 
 // URLs to cache for the app
 const urlsToCache = [

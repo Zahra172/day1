@@ -12,13 +12,8 @@ if ('serviceWorker' in navigator) {
 }
 
 // DOM Elements
-const loadingSpinner = document.getElementById('loadingSpinner');
 const postsContainer = document.getElementById('postsContainer');
 const offlineMessage = document.getElementById('offlineMessage');
-const onlineStatus = document.getElementById('onlineStatus');
-const statusDot = document.querySelector('.status-dot');
-const statusText = document.querySelector('.status-text');
-const installBtn = document.getElementById('installBtn');
 
 // API Configuration
 const API_URL = 'https://jsonplaceholder.typicode.com/posts?_limit=5';
@@ -31,12 +26,8 @@ function updateNetworkStatus() {
     isOnline = navigator.onLine;
     
     if (isOnline) {
-        statusDot.className = 'status-dot online';
-        statusText.textContent = 'Online';
         offlineMessage.hidden = true;
     } else {
-        statusDot.className = 'status-dot offline';
-        statusText.textContent = 'Offline';
         offlineMessage.hidden = false;
     }
 }
@@ -51,8 +42,6 @@ updateNetworkStatus();
 // Fetch Posts from API
 async function fetchPosts() {
     try {
-        showLoading(true);
-        
         const response = await fetch(API_URL);
         
         if (!response.ok) {
@@ -71,8 +60,6 @@ async function fetchPosts() {
             const cachedPosts = await cachedResponse.json();
             displayPosts(cachedPosts);
         }
-    } finally {
-        showLoading(false);
     }
 }
 
@@ -104,36 +91,6 @@ function displayPosts(posts) {
         postsContainer.appendChild(postCard);
     });
 }
-
-// Show/Hide Loading Spinner
-function showLoading(show) {
-    loadingSpinner.hidden = !show;
-}
-
-// PWA Install Handler
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.hidden = false;
-});
-
-installBtn.addEventListener('click', async () => {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        
-        if (outcome === 'accepted') {
-            console.log('User accepted the install prompt');
-        } else {
-            console.log('User dismissed the install prompt');
-        }
-        
-        deferredPrompt = null;
-        installBtn.hidden = true;
-    }
-});
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
